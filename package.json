@@ -1,6 +1,6 @@
 {
   "name": "seg",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "seg: The fast cli for samengine",
   "bin": {
     "seg": "./cli.js"
