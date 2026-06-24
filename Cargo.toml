@@ -1,0 +1,82 @@
+[package]
+name = "samtool"
+version = "0.1.13"
+edition = "2024"
+authors = ["Shadowdara"]
+readme = "README.md"
+description = "the fast cli tool for samengine"
+license = "Apache-2.0"
+include = ["LICENSE", "README.md", "Cargo.toml", "/src/"]
+keywords = ["samengine", "cli"]
+repository = "https://github.com/shadowdara/samengine"
+
+
+[dependencies]
+fluaterm = "0.2.2"
+samfileparser = "0.1.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# sx = { path = "../sx" }
+chrono = { version = "0.4", features = ["serde"] }
+
+[target.'cfg(windows)'.dependencies]
+win-utf8-rs = "0.2.1"
+
+[[bin]]
+name = "seg"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = 3       # 0 -> no optimizing, 3 -> max speed
+lto = "fat"         # oder "thin" für schnelleren Build
+codegen-units = 1   # bessere Optimierung, aber langsamerer Compile
+panic = "abort"     # spart etwas Platz, leicht schneller
+strip = true        # entfernt Debug-Symbole (optional)
+debug = false
+incremental = false
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
+
+[package.metadata.npm]
+# Main package name. Defaults to the crate name.
+name = "seg"
+
+# Platform package name prefix. Defaults to "{name}-". It is recommended to
+# use a scoped prefix (e.g. "@myorg/my-tool-") as publishing many packages
+# at once can trigger npm spam detection.
+prefix = "@shadowdara/seg-"
+
+# Binaries to include. Defaults to all [[bin]] targets in the crate.
+bins = ["seg"]
+
+# Target triples to generate packages for. When unset, falls back to
+# build.target in .cargo/config.toml.
+targets = [
+  # Linux musl (universal)
+  # "x86_64-unknown-linux-musl",
+  # "aarch64-unknown-linux-musl",
+
+  # Linux glibc
+  "x86_64-unknown-linux-gnu",
+  # "aarch64-unknown-linux-gnu",
+
+  # macOS
+  "x86_64-apple-darwin",
+  "aarch64-apple-darwin",
+
+  # Windows
+  "x86_64-pc-windows-msvc",
+  # "x86_64-pc-windows-gnu"
+]
+
+# Output directory. Defaults to "npm". Can only be set at the workspace
+# level (or in a standalone crate).
+out-dir = "npm"
+
+# Generate mode. In "create" mode (default), package directories are
+# recreated from scratch on every run. In "merge" mode, the main package
+# is edited in-place, preserving any custom files or package.json fields.
+mode = "merge"
