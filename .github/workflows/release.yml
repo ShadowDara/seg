@@ -3,33 +3,35 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 permissions:
   contents: write
 
 jobs:
   build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            binary: seg
+            binary: mycli
 
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            binary: seg.exe
+            binary: mycli.exe
 
           - os: macos-latest
             target: x86_64-apple-darwin
-            binary: seg
+            binary: mycli
 
           - os: macos-latest
             target: aarch64-apple-darwin
-            binary: seg
-
-    runs-on: ${{ matrix.os }}
+            binary: mycli
 
     steps:
       - uses: actions/checkout@v4
@@ -38,11 +40,14 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - run: cargo build --release --target ${{ matrix.target }}
+      - name: Build
+        run: cargo build --release --target ${{ matrix.target }}
 
-      - shell: bash
+      - name: Package
+        shell: bash
         run: |
           mkdir release
+
           cp target/${{ matrix.target }}/release/${{ matrix.binary }} release/
 
           if [[ "${{ runner.os }}" == "Windows" ]]; then
@@ -52,8 +57,53 @@ jobs:
             tar -czf ${{ matrix.target }}.tar.gz -C release .
           fi
 
-      - uses: softprops/action-gh-release@v2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: |
+            *.tar.gz
+            *.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract Version
+        id: version
+        run: |
+          echo "version=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
           files: |
-            *.zip
-            *.tar.gz
+            artifacts/**/*.tar.gz
+            artifacts/**/*.zip
+
+  publish-npm:
+    needs: release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
