@@ -1,5 +1,5 @@
 {
-  "name": "seg",
+  "name": "segn",
   "version": "0.1.15",
   "description": "seg: The fast cli for samengine",
   "bin": {
