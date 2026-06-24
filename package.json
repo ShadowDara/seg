@@ -1,0 +1,15 @@
+{
+  "name": "seg",
+  "version": "0.1.14",
+  "description": "seg: The fast cli for samengine",
+  "bin": {
+    "seg": "./cli.js"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "files": [
+    "cli.js",
+    "install.js"
+  ]
+}
