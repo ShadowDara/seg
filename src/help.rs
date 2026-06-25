@@ -1,14 +1,16 @@
-use fluaterm::{self, BLUE, END, GREEN, PURPLE, RED, YELLOW, functions::{green, purple}};
+use fluaterm::{self, BLUE, END, GREEN, PURPLE, RED, YELLOW};
 
 use crate::PROGNAME;
 
 // Help Message
 pub fn help() {
-    let help2 = r#"CLI Help
+    let help2 = r#"
+CLI Help
   -h, --help        Show Help
   --init            create a new samfile
   --linksaver, -l   run linksaver
   --birthday, -b    run the birthday tool
+
 "#;
 
     println!(r#"{}
@@ -42,6 +44,5 @@ pub fn help() {
     or {}-l{} instead of linksaver
     check {}https://samengine.vercel.app/docs/linksaver{} for more Infos
 
-{}
-"#, RED, END, GREEN, END, YELLOW, PROGNAME, END, YELLOW, END, BLUE, END, PURPLE, END, GREEN, END, YELLOW, PROGNAME, END, PURPLE, END, BLUE, END, help2);
+{}"#, RED, END, GREEN, END, YELLOW, PROGNAME, END, YELLOW, END, BLUE, END, PURPLE, END, GREEN, END, YELLOW, PROGNAME, END, PURPLE, END, BLUE, END, help2);
 }

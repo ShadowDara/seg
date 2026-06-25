@@ -110,7 +110,8 @@ fn main() {
 
     // Check arguemnt len
     if args.len() < 2 {
-        eprintln!("{}{}{}: {}No Argument Provided!{} - run with --help!", YELLOW, PROGNAME, END, RED, END);
+        // eprintln!("{}{}{}: {}No Argument Provided!{} - run with --help!", YELLOW, PROGNAME, END, RED, END);
+        help();
         return;
     }
 
@@ -119,7 +120,7 @@ fn main() {
     match first_arg.as_str() {
         // Print Help
         "-h" | "--help" => {
-            help()
+            help();
         }
 
         // Init

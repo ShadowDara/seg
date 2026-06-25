@@ -201,16 +201,16 @@ checksum = "b39cdef0fa800fc44525c84ccb54a029961a8215f9619753635a9c0d2538d46d"
 
 [[package]]
 name = "samfileparser"
-version = "0.1.2"
+version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b9412f7370de81565734cd6041d563c87920c62224dfcc3cea92c10a48b7eae"
+checksum = "2844b80434a0398b996267d30a3092265f2a50ee8cb4066c4847ecd44a6f6a19"
 dependencies = [
  "fluaterm",
 ]
 
 [[package]]
 name = "samtool"
-version = "0.1.14"
+version = "0.1.19"
 dependencies = [
  "chrono",
  "fluaterm",
