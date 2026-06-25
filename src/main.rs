@@ -1,6 +1,5 @@
 use std::{collections::HashMap, env, fs, path::Path};
 
-use fluaterm::{self, BLUE, END, GREEN, PURPLE, RED, YELLOW, functions::{red}};
 use samfileparser::{parse, run_task, validate_all, RuntimeState};
 
 #[cfg(windows)]
