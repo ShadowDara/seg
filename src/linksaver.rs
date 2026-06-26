@@ -1,11 +1,7 @@
 use fluaterm::{END, ITALIC, PURPLE};
 use serde::{Deserialize, Serialize};
 use std::{
-    env,
-    fs::{self, File},
-    io::{self, Write},
-    path::PathBuf,
-    process::Command,
+    env, fs::{self, File}, io::{self, Write}, path::{Path, PathBuf}, process::Command,
 };
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -108,6 +104,10 @@ fn init() {
         return;
     }
 
+    // Create info files
+    let _datei = File::create(".samengine/links.info.md").unwrap();
+    let _datei = File::create(".samengine/links.info.txt").unwrap();
+
     let name = prompt("Projectname: ");
     let config = new_config(name);
 
@@ -151,12 +151,25 @@ fn add2(config: &mut AppConfig) {
     println!("Added new entry!");
 }
 
+
+/// Function to convert the links file into a Markdown file
 fn view(config: &AppConfig) {
     let mut file = File::create(".samengine/links.md").unwrap();
 
-    writeln!(file, "# Links for {}\n", config.projectname).unwrap();
+    write!(file, "# Links for {}\n\n", config.projectname).unwrap();
 
-    let _ = write!(file, "Used: \n");
+    // Add Info Message
+    let pfad = Path::new(".samengine/links.info.md");
+
+    if pfad.exists() {
+        // add the content to the links file
+        let inhalt = fs::read_to_string(".samengine/links.info.md").unwrap();
+        let _ = write!(file, "{}\n\n", inhalt);
+    } else {
+        println!("Info file doesnt exist!");
+    }
+
+    let _ = write!(file, "Used for {}: \n\n", config.projectname);
 
     for l in &config.links {
         let _ = write!(file, "- ");
@@ -198,16 +211,30 @@ fn view(config: &AppConfig) {
     );
 
     println!(r#"Created File - Use parseMarkdown from samengine to make it into a nice html file.
+
 npm i samengine
 npx samengine markdown .samengine/links.md"#);
 }
 
+
+/// Function to convert the links json file into a txt file
 fn viewx(config: &AppConfig) {
     let mut file = File::create(".samengine/links.txt").unwrap();
 
-    writeln!(file, "Links for {}\n", config.projectname).unwrap();
+    write!(file, "Links for {}\n\n", config.projectname).unwrap();
 
-    let _ = write!(file, "Used: \n");
+    // Add Info Message
+    let pfad = Path::new(".samengine/links.info.txt");
+
+    if pfad.exists() {
+        // add the content to the links file
+        let inhalt = fs::read_to_string(".samengine/links.info.txt").unwrap();
+        let _ = write!(file, "{}\n\n", inhalt);
+    } else {
+        println!("Info file doesnt exist!");
+    }
+
+    let _ = write!(file, "Used for {}: \n\n", config.projectname);
 
     for l in &config.links {
         if let Some(name) = &l.name {
