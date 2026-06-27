@@ -3,3 +3,4 @@ target/
 
 .samengine/links.txt
 .samengine/links.md
+.npmrc
