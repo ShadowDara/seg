@@ -1,0 +1,1 @@
+This is seg, a fast cli tool
