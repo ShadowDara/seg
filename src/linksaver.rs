@@ -24,6 +24,9 @@ struct AppConfig {
     pretty: bool,
     links: Vec<Link>,
     links2: Vec<String>,
+
+    #[serde(default)]
+    links3: Vec<String>, // Pfade zu Lizenzdateien
     note: Option<String>
 }
 
@@ -54,6 +57,7 @@ fn new_config(name: String) -> AppConfig {
         pretty: true,
         links: vec![],
         links2: vec![],
+        links3: vec![],
         note: Some(NOTE.to_string())
     }
 }
@@ -121,6 +125,8 @@ fn init() {
     println!("Created config at {:?}", path);
 }
 
+
+// add a multi license
 fn add(config: &mut AppConfig) {
     let link = Link {
         name: {
@@ -150,6 +156,8 @@ fn add(config: &mut AppConfig) {
     println!("Added new link!");
 }
 
+
+// add a full string
 fn add2(config: &mut AppConfig) {
     let entry = prompt("Entry text: ");
     config.links2.push(entry);
@@ -157,6 +165,20 @@ fn add2(config: &mut AppConfig) {
     println!("Added new entry!");
 }
 
+
+// add the path to a license file
+fn add3(config: &mut AppConfig) {
+    let path = prompt("License file: ");
+
+    if !Path::new(&path).exists() {
+        println!("Warning: '{}' does not exist.", path);
+    }
+
+    config.links3.push(path);
+
+    save(config).unwrap();
+    println!("Added license file!");
+}
 
 /// Function to convert the links file into a Markdown file
 fn view(config: &AppConfig) {
@@ -209,6 +231,21 @@ fn view(config: &AppConfig) {
 
     for l in &config.links2 {
         let _ = write!(file, "- {}\n", l);
+    }
+
+    for path in &config.links3 {
+        if Path::new(path).exists() {
+            match fs::read_to_string(path) {
+                Ok(content) => {
+                    let _ = write!(file, "\n{}\n", content);
+                }
+                Err(e) => {
+                    eprintln!("Warning: Could not read '{}': {}", path, e);
+                }
+            }
+        } else {
+            eprintln!("Warning: License file '{}' does not exist.", path);
+        }
     }
 
     let _ = write!(
@@ -347,6 +384,7 @@ fn help() {
     init    create config
     add     add link
     add2    add entry (text only)
+    add3    add license file
     view    formats the links into a Markdown File
     viewx   formats the links into a TXT File
     list    list links
@@ -383,6 +421,7 @@ pub fn execute(arg: &str) {
     match arg {
         "add" => add(&mut config),
         "add2" => add2(&mut config),
+        "add3" => add3(&mut config),
         "view" => view(&config),
         "viewx" => viewx(&config),
         "list" => list(&config),
