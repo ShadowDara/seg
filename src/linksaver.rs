@@ -4,6 +4,8 @@ use std::{
     env, fs::{self, File}, io::{self, Write}, path::{Path, PathBuf}, process::Command,
 };
 
+const NOTE: &str = "This file was generated with linksaver from seg from the samengine project. https://samengine.js.org or https://github.com/shadowdara/seg";
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct Link {
     name: Option<String>,
@@ -22,6 +24,7 @@ struct AppConfig {
     pretty: bool,
     links: Vec<Link>,
     links2: Vec<String>,
+    note: Option<String>
 }
 
 // ---------- PATH ----------
@@ -51,6 +54,7 @@ fn new_config(name: String) -> AppConfig {
         pretty: true,
         links: vec![],
         links2: vec![],
+        note: Some(NOTE.to_string())
     }
 }
 
@@ -78,7 +82,7 @@ fn load() -> Result<AppConfig, std::io::Error> {
     }
 
     let data = fs::read_to_string(path)?;
-    let config: AppConfig = serde_json::from_str(&data)?;
+    let mut config: AppConfig = serde_json::from_str(&data)?;
 
     if config.projectname.is_empty() {
         return Err(std::io::Error::new(
@@ -86,6 +90,8 @@ fn load() -> Result<AppConfig, std::io::Error> {
             "projectname must be set",
         ));
     }
+
+    config.note = Some(NOTE.to_string());
 
     Ok(config)
 }
