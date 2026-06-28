@@ -180,6 +180,7 @@ fn add3(config: &mut AppConfig) {
     println!("Added license file!");
 }
 
+
 /// Function to convert the links file into a Markdown file
 fn view(config: &AppConfig) {
     let mut file = File::create(".samengine/links.md").unwrap();
@@ -229,15 +230,17 @@ fn view(config: &AppConfig) {
         let _ = write!(file, "\n");
     }
 
+    // for links2
     for l in &config.links2 {
         let _ = write!(file, "- {}\n", l);
     }
 
+    // for links3
     for path in &config.links3 {
         if Path::new(path).exists() {
             match fs::read_to_string(path) {
                 Ok(content) => {
-                    let _ = write!(file, "\n{}\n", content);
+                    let _ = write!(file, "\n---\n\n**license content from file: {}**\n\n```\n{}\n```\n\n", path, content);
                 }
                 Err(e) => {
                     eprintln!("Warning: Could not read '{}': {}", path, e);
@@ -309,6 +312,22 @@ fn viewx(config: &AppConfig) {
 
     for l in &config.links2 {
         let _ = write!(file, "- {}", l);
+    }
+
+    // for links3
+    for path in &config.links3 {
+        if Path::new(path).exists() {
+            match fs::read_to_string(path) {
+                Ok(content) => {
+                    let _ = write!(file, "\nlicense content from file: {}\n\n{}\n\n", path, content);
+                }
+                Err(e) => {
+                    eprintln!("Warning: Could not read '{}': {}", path, e);
+                }
+            }
+        } else {
+            eprintln!("Warning: License file '{}' does not exist.", path);
+        }
     }
 
     let _ = write!(
