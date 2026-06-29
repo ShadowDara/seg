@@ -73,7 +73,7 @@ fn main() {
 
         // When not found
         _ => {
-            let conf = RunConfig{debug: false, errorMode: ErrorMode::FailFast};
+            let conf = RunConfig{debug: true, errorMode: ErrorMode::FailFast};
             samfileparser::init::run_sam_file(first_arg, conf);
         }
     }

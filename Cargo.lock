@@ -207,9 +207,9 @@ checksum = "b39cdef0fa800fc44525c84ccb54a029961a8215f9619753635a9c0d2538d46d"
 
 [[package]]
 name = "samfileparser"
-version = "0.1.6"
+version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "79b463d9ad944933ef84586cd326a6b7cf89069e4888f8c3857bee01687152a7"
+checksum = "bdf7cb71724120f993dfcba366ee5d22badfcb2b8ebb729ee0dcd968ed18cbae"
 dependencies = [
  "fluaterm",
  "fs_extra",
