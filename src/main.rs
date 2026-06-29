@@ -1,12 +1,12 @@
 use std::env;
 
+use samfileparser::init::{ErrorMode, RunConfig};
 #[cfg(windows)]
 use win_utf8_rs::enable_utf8;
 
 mod linksaver;
 mod help;
 mod birthdaytool;
-mod samfile;
 
 use crate::help::help;
 
@@ -37,7 +37,7 @@ fn main() {
 
         // Init
         "--init" => {
-            samfile::init();
+            samfileparser::init::init();
         }
 
         // Linksaver
@@ -73,7 +73,8 @@ fn main() {
 
         // When not found
         _ => {
-            samfile::run_sam_file(first_arg);
+            let conf = RunConfig{debug: false, errorMode: ErrorMode::FailFast};
+            samfileparser::init::run_sam_file(first_arg, conf);
         }
     }
 }

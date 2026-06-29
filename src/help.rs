@@ -33,6 +33,7 @@ CLI Help
     
     PS: The File is named {}samfile{}
     PS: Full Guide about it on {}https://samengine.vercel.app/docs/samfile{}
+    or on https://docs.rs/samfileparser/latest/samfileparser/
     
     Run with {}--init{} to create a new samefile in your project directory
 
