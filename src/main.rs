@@ -3,6 +3,9 @@ use std::env;
 use samfileparser::init::{ErrorMode, RunConfig};
 #[cfg(windows)]
 use win_utf8_rs::enable_utf8;
+//use minify_html::{Cfg, minify};
+use std::fs;
+use std::io;
 
 mod linksaver;
 mod help;
@@ -11,6 +14,10 @@ mod birthdaytool;
 use crate::help::help;
 
 const PROGNAME: &str = "seg";
+
+fn load_file(path: &str) -> Result<String, io::Error> {
+    fs::read_to_string(path)
+}
 
 
 // Main function
@@ -70,6 +77,20 @@ fn main() {
         "-b" | "--birthday" => {
             birthdaytool::bmain();
         }
+
+        // // Minify HTML
+        // "-min" => {
+        //     let mut sndarg = "";
+            
+        //     if args.len() >= 3 {
+        //         sndarg = &args[2];
+        //         let html = load_file(sndarg).unwrap();
+        //         let mut cfg = Cfg::new();
+        //         cfg.keep_comments = false;
+        //         let minified = minify(&html.as_bytes(), &cfg);
+        //         let _ = fs::write(sndarg, minified);
+        //     }
+        // }
 
         // When not found
         _ => {
