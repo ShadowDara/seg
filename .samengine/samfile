@@ -1,4 +1,6 @@
 # A new samfile, write your scripts here
 
+#define RIP 10
+
 info:
-    echo Hallo
+    echo Hallo RIP
