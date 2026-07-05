@@ -4,3 +4,10 @@
 
 info:
     echo Hallo RIP
+
+# Install the tool
+i:
+    RUN cargo install --path .
+
+_i:
+    echo hallo
