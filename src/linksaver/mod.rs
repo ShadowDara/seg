@@ -1,17 +1,18 @@
+mod add;
 mod format;
 
-use chrono::{Utc};
+use chrono::Utc;
 use fluaterm::{END, ITALIC, PURPLE};
 use serde::{Deserialize, Serialize};
 use std::{
     env,
     fs::{self, File},
     io::{self, Write},
-    path::{Path, PathBuf},
+    path::{PathBuf},
     process::Command,
 };
 
-use crate::linksaver::format::{list, view, viewx};
+use crate::linksaver::{add::{add4, add5}, format::{list, view, viewx}};
 
 const NOTE: &str = "This file was generated with linksaver from seg from the samengine project. https://samengine.js.org or https://github.com/shadowdara/seg";
 const SCHEMA_URL: &str = "https://raw.githubusercontent.com/ShadowDara/samengine/refs/heads/master/.samengine/shema.linksaver.json";
@@ -32,7 +33,7 @@ struct Link {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct Link4 {
     link: String,
-    date: String
+    date: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -193,32 +194,6 @@ fn add(config: &mut AppConfig) {
     println!("Added new link!");
 }
 
-// add a full string
-fn add2(config: &mut AppConfig) {
-    let entry = prompt("Entry text: ");
-    config.links2.push(entry);
-    save(config).unwrap();
-    println!("Added new entry!");
-}
-
-// add the path to a license file
-fn add3(config: &mut AppConfig) {
-    let path = prompt("License file: ");
-
-    if !Path::new(&path).exists() {
-        println!("Warning: '{}' does not exist.", path);
-    }
-
-    config.links3.push(path);
-
-    save(config).unwrap();
-    println!("Added license file!");
-}
-
-// add4
-
-// add5
-
 fn open_link(url: &str) {
     let cmd = if cfg!(windows) {
         Command::new("cmd").args(["/C", "start", url]).spawn()
@@ -294,8 +269,8 @@ pub fn execute(arg: &str) {
 
     match arg {
         "add" => add(&mut config),
-        "add2" => add2(&mut config),
-        "add3" => add3(&mut config),
+        "add2" => add4(&mut config),
+        "add3" => add5(&mut config),
         "view" => view(&config),
         "viewx" => viewx(&config),
         "list" => list(&config),

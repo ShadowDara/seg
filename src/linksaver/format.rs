@@ -1,8 +1,8 @@
 use crate::linksaver::AppConfig;
 use std::{
     fs::{self, File},
-    io::{Write},
-    path::{Path}
+    io::Write,
+    path::Path,
 };
 
 /// Function to convert the links file into a Markdown file
@@ -52,7 +52,7 @@ pub fn view(config: &AppConfig) {
         }
 
         if let Some(date) = &l.date {
-            let _ = write!(file, " - *(downloaded on the {})*", date);
+            let _ = write!(file, " - *(saved at date: {})*", date);
         }
 
         let _ = write!(file, "\n");
@@ -61,6 +61,11 @@ pub fn view(config: &AppConfig) {
     // for links2
     for l in &config.links2 {
         let _ = write!(file, "- {}\n", l);
+    }
+
+    // for links4
+    for l in &config.links4 {
+        let _ = write!(file, "- {} saved at date: **{}**\n", l.link, l.date);
     }
 
     // for links3
@@ -80,6 +85,26 @@ pub fn view(config: &AppConfig) {
             }
         } else {
             eprintln!("Warning: License file '{}' does not exist.", path);
+        }
+    }
+
+    // for links5
+    for path in &config.links5 {
+        if Path::new(&path.link).exists() {
+            match fs::read_to_string(path.link.clone()) {
+                Ok(content) => {
+                    let _ = write!(
+                        file,
+                        "\n---\n\n**license content from file: {}** at date: *{}*\n\n```\n{}\n```\n",
+                        path.link, path.date, content
+                    );
+                }
+                Err(e) => {
+                    eprintln!("Warning: Could not read '{}': {}", path.link, e);
+                }
+            }
+        } else {
+            eprintln!("Warning: License file '{}' does not exist.", path.link);
         }
     }
 
@@ -147,8 +172,14 @@ pub fn viewx(config: &AppConfig) {
         let _ = write!(file, "\n");
     }
 
+    // for links2
     for l in &config.links2 {
         let _ = write!(file, "- {}", l);
+    }
+
+    // for links4
+    for l in &config.links4 {
+        let _ = write!(file, "- {} saved at date: {}\n", l.link, l.date);
     }
 
     // for links3
@@ -168,6 +199,26 @@ pub fn viewx(config: &AppConfig) {
             }
         } else {
             eprintln!("Warning: License file '{}' does not exist.", path);
+        }
+    }
+
+    // for links5
+    for path in &config.links5 {
+        if Path::new(&path.link).exists() {
+            match fs::read_to_string(path.link.clone()) {
+                Ok(content) => {
+                    let _ = write!(
+                        file,
+                        "\nlicense content from file: {} at date: {}\n\n{}\n",
+                        path.link, path.date, content
+                    );
+                }
+                Err(e) => {
+                    eprintln!("Warning: Could not read '{}': {}", path.link, e);
+                }
+            }
+        } else {
+            eprintln!("Warning: License file '{}' does not exist.", path.link);
         }
     }
 
