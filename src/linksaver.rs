@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use fluaterm::{END, ITALIC, PURPLE};
 use serde::{Deserialize, Serialize};
 use std::{
@@ -21,6 +22,7 @@ struct Link {
     licenselink: Option<String>,
     showinlist: bool,
     changenotice: bool,
+    date: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -162,6 +164,7 @@ fn add(config: &mut AppConfig) {
         },
         showinlist: prompt("Show in list? (y/n, default y): ") != "n",
         changenotice: prompt("Mark as changed? (y/n, default n): ") == "y",
+        date: Some(Utc::now().to_rfc3339()),
     };
 
     config.links.push(link);
@@ -235,6 +238,10 @@ fn view(config: &AppConfig) {
 
         if l.changenotice {
             let _ = write!(file, "- *(changes were made)*");
+        }
+
+        if let Some(date) = &l.date {
+            let _ = write!(file, " - *(downloaded on the {})*", date);
         }
 
         let _ = write!(file, "\n");
@@ -320,6 +327,10 @@ fn viewx(config: &AppConfig) {
 
         if l.changenotice {
             let _ = write!(file, "- (changes were made)");
+        }
+
+        if let Some(date) = &l.date {
+            let _ = write!(file, " - (downloaded on the {})", date);
         }
 
         let _ = write!(file, "\n");

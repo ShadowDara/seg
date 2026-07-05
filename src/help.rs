@@ -2,6 +2,8 @@ use fluaterm::{self, BLUE, END, GREEN, PURPLE, RED, YELLOW};
 
 use crate::PROGNAME;
 
+//   --genicon, -g     convert an image to an ico file
+
 // Help Message
 pub fn help() {
     let help2 = r#"
@@ -13,7 +15,8 @@ CLI Help
 
 "#;
 
-    println!(r#"{}
+    println!(
+        r#"{}
 ███████╗ █████╗ ███╗   ███╗███████╗███╗   ██╗ ██████╗ ██╗███╗   ██╗███████╗
 ██╔════╝██╔══██╗████╗ ████║██╔════╝████╗  ██║██╔════╝ ██║████╗  ██║██╔════╝
 ███████╗███████║██╔████╔██║█████╗  ██╔██╗ ██║██║  ███╗██║██╔██╗ ██║█████╗  
@@ -45,5 +48,29 @@ CLI Help
     or {}-l{} instead of linksaver
     check {}https://samengine.vercel.app/docs/linksaver{} for more Infos
 
-{}"#, RED, END, GREEN, END, YELLOW, PROGNAME, END, YELLOW, END, BLUE, END, PURPLE, END, GREEN, END, YELLOW, PROGNAME, END, PURPLE, END, BLUE, END, help2);
+{}"#,
+        RED,
+        END,
+        GREEN,
+        END,
+        YELLOW,
+        PROGNAME,
+        END,
+        YELLOW,
+        END,
+        BLUE,
+        END,
+        PURPLE,
+        END,
+        GREEN,
+        END,
+        YELLOW,
+        PROGNAME,
+        END,
+        PURPLE,
+        END,
+        BLUE,
+        END,
+        help2
+    );
 }

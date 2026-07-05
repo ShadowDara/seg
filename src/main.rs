@@ -10,6 +10,7 @@ use std::io;
 mod linksaver;
 mod help;
 mod birthdaytool;
+// mod genicon;
 
 use crate::help::help;
 
@@ -77,6 +78,19 @@ fn main() {
         "-b" | "--birthday" => {
             birthdaytool::bmain();
         }
+
+        // // gen Icon File
+        // "-g" | "--genicon" => {
+        //     let mut sndarg = "";
+            
+        //     if args.len() >= 3 {
+        //         sndarg = &args[2];
+        //         let _ = genicon::genicon(sndarg);
+        //         return;
+        //     }
+
+        //     println!("No arg for icon name provied!");
+        // }
 
         // // Minify HTML
         // "-min" => {
