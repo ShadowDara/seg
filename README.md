@@ -1,5 +1,19 @@
 # seg (samtool)
 
-[![Release Samtool](https://github.com/ShadowDara/samengine/actions/workflows/release-samtool.yml/badge.svg)](https://github.com/ShadowDara/samengine/actions/workflows/release-samtool.yml)
+The runner for samfiles. The cli tool is named seg.
 
-The fast CLI Tool for [samengine](https://github.com/shadowdara/samengine)
+See [samfiles](https://shadowdara.github.io/docs/#/samfile)
+
+## Install
+
+### cargo
+
+```
+cargo install samtool
+```
+
+### npm
+
+```
+npm i @shadowdara/seg
+```
