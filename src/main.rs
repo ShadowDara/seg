@@ -8,6 +8,9 @@ use win_utf8_rs::enable_utf8;
 
 
 fn printbanner() {
+    // https://www.asciiart.eu/text-to-ascii-art
+    // DOS Rebel
+
     let text = r#"
   █████████  ██████████   █████████ 
  ███░░░░░███░░███░░░░░█  ███░░░░░███
