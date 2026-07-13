@@ -11,7 +11,7 @@ fn printbanner() {
     // https://www.asciiart.eu/text-to-ascii-art
     // DOS Rebel
 
-    let text = r#"
+    println!(r#"
   █████████  ██████████   █████████ 
  ███░░░░░███░░███░░░░░█  ███░░░░░███
 ░███    ░░░  ░███  █ ░  ███     ░░░ 
@@ -22,8 +22,7 @@ fn printbanner() {
  ░░░░░░░░░  ░░░░░░░░░░   ░░░░░░░░░  
 
 The runner for samfiles
-https://shadowdara.github.io/docs/#/samfile"#;
-    println!("{}", text)
+https://shadowdara.github.io/docs/#/samfile"#);
 }
 
 // Main function
