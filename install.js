@@ -7,9 +7,11 @@ const version = require("./package.json").version;
 
 const platformMap = {
   "linux-x64": "x86_64-unknown-linux-gnu.tar.gz",
+  "linux-arm64": "aarch64-unknown-linux-gnu.tar.gz",
   "darwin-x64": "x86_64-apple-darwin.tar.gz",
   "darwin-arm64": "aarch64-apple-darwin.tar.gz",
   "win32-x64": "x86_64-pc-windows-msvc.zip",
+  "win32-arm64": "aarch64-pc-windows-msvc.zip",
 };
 
 const key = `${process.platform}-${process.arch}`;
