@@ -6,7 +6,7 @@ authors = ["Shadowdara"]
 readme = "README.md"
 description = "the fast cli tool for samengine"
 license = "Apache-2.0"
-include = ["LICENSE", "README.md", "Cargo.toml", "/src/"]
+include = ["LICENSE", "README.md", "Cargo.toml", "/src/", "buildin.samfile", "build.rs"]
 keywords = ["samengine", "cli"]
 repository = "https://github.com/shadowdara/samengine"
 
