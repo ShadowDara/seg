@@ -1,6 +1,6 @@
 [package]
 name = "samtool"
-version = "0.2.3"
+version = "0.2.4"
 edition = "2024"
 authors = ["Shadowdara"]
 readme = "README.md"
@@ -13,11 +13,11 @@ repository = "https://github.com/shadowdara/samengine"
 
 [dependencies]
 fluaterm = "0.2.2"
-samfileparser = "0.2.4"
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+samfileparser = "0.2.6"
+# serde = { version = "1", features = ["derive"] }
+# serde_json = "1"
 # sx = { path = "../sx" }
-chrono = { version = "0.4", features = ["serde"] }
+# chrono = { version = "0.4", features = ["serde"] }
 
 #minify-html = "0.18.1"
 

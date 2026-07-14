@@ -22,7 +22,7 @@ fn main() {
     fs::write(
         &out_path,
         format!(
-            "pub const BUILTIN_SAMFILE: &str = r#\"{}\"#;",
+            "pub const BUILTIN_SAMFILE2: &str = r#\"{}\"#;",
             filtered
         ),
     )

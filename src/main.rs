@@ -1,11 +1,13 @@
 use std::env;
 
-use samfileparser::init::view_samfile_tasks;
+use samfileparser::init::{tasks, view_samfile_tasks};
 use samfileparser::init::{ErrorMode, RunConfig};
+
 #[cfg(windows)]
 use win_utf8_rs::enable_utf8;
-//use minify_html::{Cfg, minify};
 
+mod buildin;
+use crate::buildin::BUILTIN_SAMFILE2;
 
 fn printbanner() {
     // https://www.asciiart.eu/text-to-ascii-art
@@ -22,7 +24,8 @@ fn printbanner() {
  ░░░░░░░░░  ░░░░░░░░░░   ░░░░░░░░░  
 
 The runner for samfiles
-https://shadowdara.github.io/docs/#/samfile"#);
+https://shadowdara.github.io/docs/#/samfile
+"#);
 }
 
 // Main function
@@ -36,15 +39,25 @@ fn main() {
 
     // Check arguemnt len
     if args.len() < 2 {
-        view_samfile_tasks();
+        tasks();
         return;
     }
 
     let first_arg = &args[1];
 
+    if first_arg == "-a" {
+        view_samfile_tasks(BUILTIN_SAMFILE2);
+        return;
+    }
+    else if first_arg == "-l" {
+        println!("This option is deprecated! See here for more Infos: https://shadowdara.github.io/docs/#/linksaver");
+        return;
+    }
+
     let conf = RunConfig {
         debug: true,
         errorMode: ErrorMode::FailFast,
     };
-    samfileparser::init::run_sam_file(first_arg, conf);
+
+    samfileparser::init::run_sam_file(first_arg, conf, BUILTIN_SAMFILE2);
 }
