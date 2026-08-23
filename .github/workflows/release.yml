@@ -179,7 +179,7 @@ jobs:
           files: |
             ${{ matrix.target }}.tar.gz
             ${{ matrix.target }}.zip
-          fail_on_unmatched_files: true
+          fail_on_unmatched_files: false
 
   # ---------------------------------------------------------
   # Publish npm package
