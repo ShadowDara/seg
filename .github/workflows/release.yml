@@ -9,25 +9,122 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  # ---------------------------------------------------------
+  # Create the GitHub Release first.
+  # No GitHub Actions artifacts are used.
+  # ---------------------------------------------------------
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: true
+
+  # ---------------------------------------------------------
+  # Linux builds
+  # Ubuntu 20.04 container for glibc compatibility
+  # ---------------------------------------------------------
+  build-linux:
     name: Build ${{ matrix.target }}
+    needs: release
+    runs-on: ubuntu-latest
+
+    container:
+      image: ubuntu:20.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            binary: seg
+
+          - target: aarch64-unknown-linux-gnu
+            binary: seg
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          apt-get update
+
+          DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            curl \
+            build-essential \
+            gcc-aarch64-linux-gnu \
+            g++-aarch64-linux-gnu \
+            pkg-config \
+            ca-certificates \
+            git \
+            tar
+
+      - name: Install Rust
+        run: |
+          curl --proto '=https' \
+            --tlsv1.2 \
+            -sSf https://sh.rustup.rs | \
+            sh -s -- -y --default-toolchain stable
+
+      - name: Add Rust target
+        run: |
+          source "$HOME/.cargo/env"
+          rustup target add ${{ matrix.target }}
+
+      - name: Configure ARM64 linker
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: |
+          mkdir -p .cargo
+
+          cat > .cargo/config.toml <<'EOF'
+          [target.aarch64-unknown-linux-gnu]
+          linker = "aarch64-linux-gnu-gcc"
+          EOF
+
+      - name: Build
+        run: |
+          source "$HOME/.cargo/env"
+
+          cargo build \
+            --release \
+            --target ${{ matrix.target }}
+
+      - name: Package
+        run: |
+          mkdir -p release
+
+          cp \
+            target/${{ matrix.target }}/release/${{ matrix.binary }} \
+            release/
+
+          tar -czf \
+            ${{ matrix.target }}.tar.gz \
+            -C release .
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: |
+            ${{ matrix.target }}.tar.gz
+          fail_on_unmatched_files: true
+
+  # ---------------------------------------------------------
+  # Windows + macOS builds
+  # ---------------------------------------------------------
+  build-other:
+    name: Build ${{ matrix.target }}
+    needs: release
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
         include:
-          # Linux - Ubuntu 20.04 container
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
-            binary: seg
-            container: ubuntu:20.04
-
-          - os: ubuntu-latest
-            target: aarch64-unknown-linux-gnu
-            binary: seg
-            container: ubuntu:20.04
-
           # Windows
           - os: windows-latest
             target: x86_64-pc-windows-msvc
@@ -46,103 +143,53 @@ jobs:
             target: aarch64-apple-darwin
             binary: seg
 
-    container: ${{ matrix.container }}
-
     steps:
       - uses: actions/checkout@v4
 
-      # Linux container setup
-      - name: Install Linux dependencies
-        if: runner.os == 'Linux'
-        run: |
-          apt-get update
-          DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            curl \
-            build-essential \
-            gcc-aarch64-linux-gnu \
-            g++-aarch64-linux-gnu \
-            pkg-config \
-            ca-certificates \
-            git \
-            7zip
-
-      - name: Install Rust
-        if: runner.os == 'Linux'
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
-            sh -s -- -y --default-toolchain stable
-          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
-
-      - name: Rust toolchain
-        if: runner.os != 'Linux'
-        uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
 
-      - name: Rust target
-        if: runner.os == 'Linux'
-        run: |
-          source "$HOME/.cargo/env"
-          rustup target add ${{ matrix.target }}
-
       - name: Build
-        shell: bash
-        run: |
-          if [[ "${{ runner.os }}" == "Linux" ]]; then
-            source "$HOME/.cargo/env"
-          fi
-
-          cargo build --release --target ${{ matrix.target }}
+        run: cargo build --release --target ${{ matrix.target }}
 
       - name: Package
         shell: bash
         run: |
-          mkdir release
+          mkdir -p release
 
-          cp target/${{ matrix.target }}/release/${{ matrix.binary }} release/
+          cp \
+            target/${{ matrix.target }}/release/${{ matrix.binary }} \
+            release/
 
           if [[ "${{ runner.os }}" == "Windows" ]]; then
-            cd release
-            7z a ../${{ matrix.target }}.zip *
+            7z a \
+              "${{ matrix.target }}.zip" \
+              release/*
           else
-            tar -czf ${{ matrix.target }}.tar.gz -C release .
+            tar -czf \
+              "${{ matrix.target }}.tar.gz" \
+              -C release .
           fi
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.target }}
-          path: |
-            *.tar.gz
-            *.zip
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-
-    outputs:
-      version: ${{ steps.version.outputs.version }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Extract Version
-        id: version
-        run: |
-          echo "version=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
-
-      - uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Create GitHub Release
+      - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.ref_name }}
           files: |
-            artifacts/**/*.tar.gz
-            artifacts/**/*.zip
+            ${{ matrix.target }}.tar.gz
+            ${{ matrix.target }}.zip
+          fail_on_unmatched_files: true
 
+  # ---------------------------------------------------------
+  # Publish npm package
+  # ---------------------------------------------------------
   publish-npm:
-    needs: release
+    name: Publish npm
+    needs:
+      - build-linux
+      - build-other
+
     runs-on: ubuntu-latest
 
     steps:
