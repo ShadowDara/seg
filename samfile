@@ -1,0 +1,15 @@
+# A new samfile, write your scripts here
+
+#define RIP 10
+
+info:
+    echo Hallo RIP
+
+# Install the tool
+i:
+    RUN cargo install --path .
+
+_i:
+    echo hallo
+    echo "┌────────────────────────────────────┐\n│  #####        #######      ########│\n│ ##   ##      ##     ##     ##      │\n│##     ##            ##     ##      │\n│##     ##      #######      ####### │\n│##     ##     ##                  ##│\n│ ##   ##  ### ##        ### ##    ##│\n│  #####   ### ######### ###  ###### │\n└────────────────────────────────────┘"
+

@@ -1,9 +1,14 @@
+# Realease seg for all platforms!
+
 name: Release
 
 on:
   push:
     tags:
       - "v*"
+
+env:
+  CARGO_TERM_COLOR: always
 
 permissions:
   contents: write
@@ -18,6 +23,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+        - name: Verify version
+          shell: bash
+          run: |
+            TAG="${GITHUB_REF_NAME#v}"
+            VERSION_NODE=$(node -p "require('./package.json').version")
+            VERSION_CARGO=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')
+            VERSION_TEST=$(python testversion.py)
+        
+            for SOURCE in \
+              "package.json:$VERSION_NODE" \
+              "Cargo.toml:$VERSION_CARGO" \
+              "testversion.py:$VERSION_TEST"
+            do
+              NAME="${SOURCE%%:*}"
+              VERSION="${SOURCE#*:}"
+        
+              if [ "$VERSION" != "$TAG" ]; then
+                echo "$NAME version ($VERSION) does not match tag ($TAG)"
+                exit 1
+              fi
+            done
+    
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -44,6 +71,23 @@ jobs:
             binary: seg
 
           - target: aarch64-unknown-linux-gnu
+            binary: seg
+
+          - target: armv7-unknown-linux-gnueabihf
+            binary: seg
+
+          - target: riscv64gc-unknown-linux-gnu
+            binary: seg
+
+          # Free freebsd
+          - target: x86_64-unknown-freebsd
+            binary: seg
+
+          # Android
+          - target: aarch64-linux-Android
+            binary: seg
+
+          - target: armv7-linux-androideabi
             binary: seg
 
     steps:
@@ -76,8 +120,21 @@ jobs:
         shell: bash
         run: |
           source "$HOME/.cargo/env"
+          
           rustup target add ${{ matrix.target }}
 
+      # Install cargo cross
+      - name: Install cross
+        if: |
+          matrix.target == 'aarch64-unknown-linux-gnu' ||
+          matrix.target == 'armv7-unknown-linux-gnueabihf' ||
+          matrix.target == 'riscv64gc-unknown-linux-gnu' ||
+          matrix.target == 'x86_64-unknown-freebsd'
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cross
+          
+      # Runs only on arm
       - name: Configure ARM64 linker
         shell: bash
         if: matrix.target == 'aarch64-unknown-linux-gnu'
@@ -89,14 +146,26 @@ jobs:
           linker = "aarch64-linux-gnu-gcc"
           EOF
 
-      - name: Build
+      - name: Build native target
         shell: bash
+        if: |
+          matrix.target == 'x86_64-unknown-linux-gnu'
         run: |
           source "$HOME/.cargo/env"
+          
+          cargo build --release --target ${{ matrix.target }}
 
-          cargo build \
-            --release \
-            --target ${{ matrix.target }}
+      - name: Build cross target
+        shell: bash
+        if: |
+          matrix.target == 'aarch64-unknown-linux-gnu' ||
+          matrix.target == 'armv7-unknown-linux-gnueabihf' ||
+          matrix.target == 'riscv64gc-unknown-linux-gnu' ||
+          matrix.target == 'x86_64-unknown-freebsd'
+        run: |
+          source "$HOME/.cargo/env"
+          
+          cross build --release --target ${{ matrix.target }}
 
       - name: Package
         shell: bash
@@ -136,6 +205,12 @@ jobs:
             target: x86_64-pc-windows-msvc
             binary: seg.exe
 
+          # Windows 32 bit 
+          - os: windows-latest
+            target: i686-pc-windows-msvc
+            binary: seg.exe
+
+          # Windows ARM
           - os: windows-latest
             target: aarch64-pc-windows-msvc
             binary: seg.exe
@@ -211,3 +286,36 @@ jobs:
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  #
+  # Publish cargo
+  #
+  publish-cargo:
+    name: Publish Cargo package
+    needs:
+      - build-linux
+      - build-other
+      
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - run: cargo publish
+
+  # ---------------------------------------
+  # Publish pip
+  # ---------------------------------------
+  publish-pip:
+    name: Publish pip package
+    needs:
+      - build-linux
+      - build-other
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: echo "add pip publish herw"

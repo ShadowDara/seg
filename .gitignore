@@ -1,6 +1,10 @@
-target/
+/target/
 *.exe
 
 .samengine/links.txt
 .samengine/links.md
 .npmrc
+s
+*.tgz
+
+/node_modules/

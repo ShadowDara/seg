@@ -10,3 +10,19 @@
 // The Banner are from (link) with Banner3 as the Font
 // https://www.asciiart.eu/text-to-ascii-art
 
+//
+// Version
+// v0.2.7
+//
+
+# add the cargo crates to linksaver
+#
+# seg _build_in_cargo_license
+_build_in_cargo_license:
+    RUN l2 addcargo
+
+# add the npm packages to linksaver
+#
+# seg _build_in_cargo_license
+_build_in_npm_license:
+   RUN l2 addpkg

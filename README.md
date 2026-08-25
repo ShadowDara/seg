@@ -20,6 +20,6 @@ npm i @shadowdara/seg
 ```
 
 
-## Tasks
+## Cli arguments
 
 View every Task by adding `-a`. More Infos in the Docs

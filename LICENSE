@@ -1,3 +1,5 @@
+(PS THERE IS AN ADDITION TO THE LICENSE AT THE END OF THE FILE SO PLEASE READ THIS PART TOO!)
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -199,3 +201,21 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+
+
+Truthfulness Addendum
+
+As a condition of this license, you may not knowingly make false or
+misleading statements about the Work, including its functionality,
+operation, performance, origin, or method of creation.
+
+Any description, explanation, demonstration, or documentation of the
+Work must be made in good faith and must reflect its actual behavior
+and capabilities to the best of your knowledge.
+
+Knowingly providing false or misleading information about the Work
+automatically terminates the permissions granted under this license.
+
+More Infos at https://shadowdara.github.io/license/v2
+

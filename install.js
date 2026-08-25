@@ -6,23 +6,79 @@ const { execSync } = require("child_process");
 const version = require("./package.json").version;
 
 const platformMap = {
-  "linux-x64": "x86_64-unknown-linux-gnu.tar.gz",
-  "linux-arm64": "aarch64-unknown-linux-gnu.tar.gz",
-  "darwin-x64": "x86_64-apple-darwin.tar.gz",
-  "darwin-arm64": "aarch64-apple-darwin.tar.gz",
-  "win32-x64": "x86_64-pc-windows-msvc.zip",
-  "win32-arm64": "aarch64-pc-windows-msvc.zip",
+  // Linux
+  "linux-x64": {
+    target: "x86_64-unknown-linux-gnu",
+    extension: "tar.gz",
+  },
+
+  "linux-arm64": {
+    target: "aarch64-unknown-linux-gnu",
+    extension: "tar.gz",
+  },
+
+  "linux-arm": {
+    target: "armv7-unknown-linux-gnueabihf",
+    extension: "tar.gz",
+  },
+
+  "linux-riscv64": {
+    target: "riscv64gc-unknown-linux-gnu",
+    extension: "tar.gz",
+  },
+
+  // macOS
+  "darwin-x64": {
+    target: "x86_64-apple-darwin",
+    extension: "tar.gz",
+  },
+
+  "darwin-arm64": {
+    target: "aarch64-apple-darwin",
+    extension: "tar.gz",
+  },
+
+  // Windows
+  "win32-x64": {
+    target: "x86_64-pc-windows-msvc",
+    extension: "zip",
+  },
+
+  "win32-ia32": {
+    target: "i686-pc-windows-msvc",
+    extension: "zip",
+  },
+
+  "win32-arm64": {
+    target: "aarch64-pc-windows-msvc",
+    extension: "zip",
+  },
+
+  // Android
+  "android-arm64": {
+    target: "aarch64-linux-android",
+    extension: "tar.gz",
+  },
+
+  "android-arm": {
+    target: "armv7-linux-androideabi",
+    extension: "tar.gz",
+  },
 };
 
 const key = `${process.platform}-${process.arch}`;
-const asset = platformMap[key];
 
-if (!asset) {
+const platform = platformMap[key];
+
+if (!platform) {
   console.error(`Unsupported platform: ${key}`);
   process.exit(1);
 }
 
-const url = `https://github.com/Shadowdara/seg/releases/download/v${version}/${asset}`;
+const asset = `seg-${version}-${platform.target}.${platform.extension}`;
+
+const url =
+  `https://github.com/Shadowdara/seg/releases/download/v${version}/${asset}`;
 
 fs.mkdirSync("bin", { recursive: true });
 
@@ -76,7 +132,7 @@ function download(url, destination) {
 
     console.log(`Downloaded ${size} bytes`);
 
-    if (asset.endsWith(".zip")) {
+    if (platform.extension === "zip") {
       execSync(
         `powershell Expand-Archive "${archive}" bin`,
         { stdio: "inherit" }

@@ -3,10 +3,10 @@ use std::env;
 use samfileparser::init::{tasks, view_samfile_tasks};
 use samfileparser::init::{ErrorMode, RunConfig};
 
-#[cfg(windows)]
 use win_utf8_rs::enable_utf8;
 
 mod buildin;
+
 use crate::buildin::BUILTIN_SAMFILE2;
 
 fn printbanner() {
@@ -30,8 +30,9 @@ https://shadowdara.github.io/docs/#/samfile
 
 // Main function
 fn main() {
-    #[cfg(windows)]
     let _ = enable_utf8();
+
+    human_panic::setup_panic!();
 
     let args: Vec<String> = env::args().collect();
 
