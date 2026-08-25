@@ -1,6 +1,6 @@
 {
   "name": "@shadowdara/seg",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "seg: The fast cli for samfiles",
   "bin": {
     "seg": "./cli.js"
@@ -13,12 +13,6 @@
     "install.js"
   ],
   "devDependencies": {
-    "@babel/core": "^7.29.7",
-    "@babel/preset-env": "^7.29.7",
-    "@rollup/plugin-babel": "^7.1.0",
-    "@rollup/plugin-typescript": "^12.3.0",
-    "rollup": "^4.62.5",
-    "tslib": "^2.8.1",
-    "typescript": "^5.9.3"
+    "smol-toml": "^1.8.0"
   }
 }

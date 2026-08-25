@@ -1,30 +1,19 @@
 [package]
 name = "samtool"
-version = "0.2.6"
+version = "0.2.7"
 edition = "2024"
-authors = ["Shadowdara"]
+authors = [ "Shadowdara" ]
 readme = "README.md"
 description = "the fast cli tool for samfiles"
 license = "Apache-2.0"
-include = ["LICENSE", "README.md", "Cargo.toml", "/src/", "buildin.samfile", "build.rs"]
-keywords = ["samengine", "cli"]
+include = [ "LICENSE", "README.md", "Cargo.toml", "/src/", "buildin.samfile", "build.rs" ]
+keywords = [ "samengine", "cli" ]
 repository = "https://github.com/shadowdara/seg"
-
 
 [dependencies]
 fluaterm = "0.2.2"
 human-panic = "2.0.8"
 samfileparser = "0.2.7"
-# serde = { version = "1", features = ["derive"] }
-# serde_json = "1"
-# sx = { path = "../sx" }
-# chrono = { version = "0.4", features = ["serde"] }
-
-#minify-html = "0.18.1"
-
-# image = "0.25"
-# ico = "0.3"
-
 win-utf8-rs = "0.2.1"
 
 [[bin]]
@@ -32,10 +21,10 @@ name = "seg"
 path = "src/main.rs"
 
 [profile.release]
-opt-level = 3       # 0 -> no optimizing, 3 -> max speed
-lto = "fat"         # oder "thin" für schnelleren Build
-codegen-units = 1   # bessere Optimierung, aber langsamerer Compile
-panic = "abort"     # spart etwas Platz, leicht schneller
-strip = true        # entfernt Debug-Symbole (optional)
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
 debug = 0
 incremental = false
