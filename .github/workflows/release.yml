@@ -23,27 +23,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-        - name: Verify version
-          shell: bash
-          run: |
-            TAG="${GITHUB_REF_NAME#v}"
-            VERSION_NODE=$(node -p "require('./package.json').version")
-            VERSION_CARGO=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')
-            VERSION_TEST=$(python testversion.py)
+      - name: Verify version
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          VERSION_NODE=$(node -p "require('./package.json').version")
+          VERSION_CARGO=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')
+          VERSION_TEST=$(python testversion.py)
         
-            for SOURCE in \
-              "package.json:$VERSION_NODE" \
-              "Cargo.toml:$VERSION_CARGO" \
-              "testversion.py:$VERSION_TEST"
-            do
-              NAME="${SOURCE%%:*}"
-              VERSION="${SOURCE#*:}"
-        
-              if [ "$VERSION" != "$TAG" ]; then
-                echo "$NAME version ($VERSION) does not match tag ($TAG)"
-                exit 1
-              fi
-            done
+          for SOURCE in \
+            "package.json:$VERSION_NODE" \
+            "Cargo.toml:$VERSION_CARGO" \
+            "testversion.py:$VERSION_TEST"
+          do
+            NAME="${SOURCE%%:*}"
+            VERSION="${SOURCE#*:}"
+      
+            if [ "$VERSION" != "$TAG" ]; then
+              echo "$NAME version ($VERSION) does not match tag ($TAG)"
+              exit 1
+            fi
+          done
     
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

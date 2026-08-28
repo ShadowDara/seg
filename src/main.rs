@@ -1,64 +1,94 @@
-use std::env;
+// SEG
 
 use samfileparser::init::{tasks, view_samfile_tasks};
 use samfileparser::init::{ErrorMode, RunConfig};
 
 use win_utf8_rs::enable_utf8;
+use cargo_embed_manifest::embed;
 
-mod buildin;
+embed!();
 
-use crate::buildin::BUILTIN_SAMFILE2;
+use samtool::buildin::BUILTIN_SAMFILE2;
+use samtool::license::lmain;
+use samtool::printbanner;
 
-fn printbanner() {
-    // https://www.asciiart.eu/text-to-ascii-art
-    // DOS Rebel
+use clap::Parser;
 
-    println!(r#"
-  █████████  ██████████   █████████ 
- ███░░░░░███░░███░░░░░█  ███░░░░░███
-░███    ░░░  ░███  █ ░  ███     ░░░ 
-░░█████████  ░██████   ░███         
- ░░░░░░░░███ ░███░░█   ░███    █████
- ███    ░███ ░███ ░   █░░███  ░░███ 
-░░█████████  ██████████ ░░█████████ 
- ░░░░░░░░░  ░░░░░░░░░░   ░░░░░░░░░  
+#[derive(Parser, Debug)]
+#[command(name = "seg")]
+#[command(about = "seg cli tool for samfiles")]
+struct Args {
+    /// Zeigt die verfügbaren SAM-File Tasks
+    #[arg(short = 'a', long = "all", conflicts_with_all = ["linksaver", "license"])]
+    all: bool,
 
-The runner for samfiles
-https://shadowdara.github.io/docs/#/samfile
-"#);
+    /// Deprecated LinkSaver
+    #[arg(short = 'l', long = "linksaver", conflicts_with_all = ["all", "license"])]
+    linksaver: bool,
+
+    /// Lizenzinformationen anzeigen
+    #[arg(short = 'b', long = "license", conflicts_with_all = ["all", "linksaver"])]
+    license: bool,
+
+    /// Verbose-Ausgabe
+    #[arg(short, long, default_value_t = false, global = true)]
+    verbose: bool,
+
+    /// Config path
+    #[arg(
+        short,
+        long,
+        global = true
+    )]
+    config: Option<String>,
+
+    /// SAM-File / SAM-Task
+    samfile: Option<String>,
 }
 
-// Main function
 fn main() {
-    let _ = enable_utf8();
-
     human_panic::setup_panic!();
 
-    let args: Vec<String> = env::args().collect();
+    let _ = enable_utf8();
+
+    let args = Args::parse();
 
     printbanner();
 
-    // Check arguemnt len
-    if args.len() < 2 {
-        tasks();
-        return;
-    }
-
-    let first_arg = &args[1];
-
-    if first_arg == "-a" {
+    if args.all {
         view_samfile_tasks(BUILTIN_SAMFILE2);
         return;
     }
-    else if first_arg == "-l" {
-        println!("This option is deprecated! See here for more Infos: https://shadowdara.github.io/docs/#/linksaver");
+
+    if args.linksaver {
+        println!(
+            "This option is deprecated! See here for more Infos: \
+             https://shadowdara.github.io/docs/#/linksaver"
+        );
         return;
     }
 
-    let conf = RunConfig {
-        debug: true,
-        errorMode: ErrorMode::FailFast,
-    };
+    if args.license {
+        lmain(args.verbose, &args.config.unwrap_or("lb.config.json".to_string()));
+        return;
+    }
 
-    samfileparser::init::run_sam_file(first_arg, conf, BUILTIN_SAMFILE2);
+    match args.samfile {
+        None => {
+            tasks();
+        }
+
+        Some(samfile) => {
+            let conf = RunConfig {
+                debug: true,
+                errorMode: ErrorMode::FailFast,
+            };
+
+            samfileparser::init::run_sam_file(
+                &samfile,
+                conf,
+                BUILTIN_SAMFILE2,
+            );
+        }
+    }
 }
