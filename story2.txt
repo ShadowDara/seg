@@ -1,0 +1,75 @@
+The Password That Was Never Meant to Exist
+
+In 1977, a young engineer named Gary Thuerk sat in front of a computer terminal in California.
+
+He had a problem.
+
+His company, a small computer manufacturer called Digital Equipment Corporation, wanted to show its new machines to potential customers. But there was no social media. No mass email marketing. No easy way to contact thousands of people at once.
+
+So Thuerk had an idea.
+
+He would send them an email.
+
+There was just one problem.
+
+Email wasn't designed for advertising.
+
+At the time, electronic mail was still something mostly used by researchers and engineers. It was simple, experimental, and nowhere near the enormous communication system it would eventually become.
+
+Thuerk typed his message.
+
+Then he sent it.
+
+To around 400 people.
+
+It was the world's first mass commercial email.
+
+Some people loved the idea.
+
+Many others hated it.
+
+Complaints flooded in.
+
+The message became famous—not because it was a success, but because it was annoying.
+
+And that was the beginning of something much bigger.
+
+Years later, people would start receiving millions of unwanted emails.
+
+They would call them spam.
+
+But here's where the strange part begins.
+
+The word spam didn't originally have anything to do with computers.
+
+It came from a comedy sketch by the British group Monty Python.
+
+In the sketch, a restaurant customer tries to order breakfast, but a waitress repeatedly lists dishes containing Spam—the canned meat product.
+
+“Spam, Spam, Spam…”
+
+The word keeps appearing until it overwhelms the conversation.
+
+The joke was simple:
+
+Too much of the same thing becomes noise.
+
+Years later, computer users began using the word spam for unwanted messages that overwhelmed online conversations.
+
+And suddenly, a joke about canned meat had become one of the most important words in the history of the internet.
+
+But there's one more hidden connection.
+
+Gary Thuerk's email was sent decades before most people had ever heard the word spam in a technological context.
+
+He wasn't trying to invent spam.
+
+He was trying to sell computers.
+
+Yet that single message helped create a problem that the internet would spend decades trying to solve.
+
+Today, billions of unwanted messages are sent every day.
+
+And somewhere in all that digital noise is a strange historical echo:
+
+The first person to send a mass advertising email probably had no idea that his simple experiment would help give the internet one of its most famous problems—and that the name for that problem would come from a joke about canned meat.

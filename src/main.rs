@@ -75,6 +75,7 @@ fn main() {
 
     match args.samfile {
         None => {
+            //view_samfile_tasks(BUILTIN_SAMFILE2);
             tasks();
         }
 

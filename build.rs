@@ -10,9 +10,13 @@ fn main() {
     let filtered: String = input
         .lines()
         .filter(|line| {
-            let trimmed = line.trim_start();
-            !trimmed.starts_with('#') && !trimmed.trim().is_empty() && !trimmed.starts_with("//") && !trimmed.starts_with("--")
-        })
+    let trimmed = line.trim_start();
+
+    !trimmed.is_empty()
+        && !trimmed.starts_with("//")
+        && !trimmed.starts_with("--")
+        && (!trimmed.starts_with('#') || trimmed.starts_with("#!"))
+})
         .collect::<Vec<_>>()
         .join("\n");
 

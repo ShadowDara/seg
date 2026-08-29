@@ -26,3 +26,14 @@ _build_in_cargo_license:
 # seg _build_in_cargo_license
 _build_in_npm_license:
    RUN l2 addpkg
+
+
+// Secrets
+//
+//
+
+# seg
+#! 0.2.7 Secret
+_build_in_secret_0.2.7:
+    ECHO "test"
+ 
