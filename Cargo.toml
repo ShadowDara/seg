@@ -2,12 +2,19 @@
 name = "samtool"
 version = "0.2.7"
 edition = "2024"
-authors = [ "Shadowdara" ]
+authors = ["Shadowdara"]
 readme = "README.md"
 description = "the fast cli tool for samfiles"
 license = "Apache-2.0"
-include = [ "LICENSE", "README.md", "Cargo.toml", "/src/", "buildin.samfile", "build.rs" ]
-keywords = [ "samengine", "cli" ]
+include = [
+    "LICENSE",
+    "README.md",
+    "Cargo.toml",
+    "/src/",
+    "buildin.samfile",
+    "build.rs",
+]
+keywords = ["samengine", "cli"]
 repository = "https://github.com/shadowdara/seg"
 
 [dependencies]
@@ -18,16 +25,13 @@ win-utf8-rs = "0.2.1"
 serde_json = "1"
 chrono = { version = "0.4", features = ["clock"] }
 clap = { version = "4", features = ["derive"] }
-cargo-embed-manifest = "0.1.0"
+cargo-embed-manifest = "0.1.2"
 serde = { version = "1", features = ["derive"] }
 
-#[[bin]]
-#name = "seg"
-#path = "src/main.rs"
+[[bin]]
+name = "seg"
+path = "src/main.rs"
 
-#[[bin]]
-#name = "samtool"
-#path = "src/main.rs"
 
 [profile.release]
 opt-level = 3

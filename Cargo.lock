@@ -120,18 +120,18 @@ checksum = "72f5acc6cb2ba439de613abc23857ec3d78374d8ed5ac84e9d11336e87da8649"
 
 [[package]]
 name = "cargo-embed-manifest"
-version = "0.1.0"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "af6cbb21a1f75a5de2e531b82f802154d43a5b7e75df59cd896c308c45edd828"
+checksum = "bc0054daec3409d33125b21573bbd15c8aba527ca6ba84c2c42f5d1b4816811e"
 dependencies = [
  "cargo-embed-manifest-macro",
 ]
 
 [[package]]
 name = "cargo-embed-manifest-macro"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7bccd84ea8034f1630783ea088a0cfa98d4c58354e9971b558b39d4a7a78e5a2"
+checksum = "936750552090921486fb45ba114d81f1f6665f7318a6b252b2bab0d787faafa3"
 dependencies = [
  "proc-macro2",
  "quote",
